@@ -10,7 +10,7 @@ module.exports = {
         //     use: ['style-loader', 'css-loader']
         // }],
         rules: [{
-            test: /\.css$/,
+            test: /\.css|html$/,
             use: 'raw-loader'
         }]
     }

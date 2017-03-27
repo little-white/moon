@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -134,37 +134,25 @@ module.exports.insertCss = insertCss;
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = ".red {\n  color: red;\n}\n\n.blue {\n  color: blue;\n}\n\n.orange {\n  color: orange;\n}\n\n.green {\n  color: green;\n}"
+module.exports = "<!-- 我叫小moon -->\n<!-- 从小在西安长大 -->\n<!-- 我有个梦想，就是在家办公。。。还可以赚很多钱 -->\n<!-- 估计大家都是这么想的吧^_^ -->\n\n<!-- 我想做个名片 -->\n<!-- 总之不能太难看吧 -->\n<!-- 让我们开始吧 -->\n<img src=\"bear.jpeg\">\n<div class=\"summary\">\n    <div class=\"location\">西安</div>\n    <div class=\"name\">moon</div>\n    <div class=\"position\">xxx职位</div>\n    <div class=\"company\">xxx公司</div>\n</div>\n"
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+module.exports = "/**\n  这网络头像也忒大了，让我变小一点\n  只需要改变width\n*/\n\nimg {\n  width: 300px;\n}\n\n/**\n  为了让我的名片凸显出来\n  我们加个\n  圆角\n  阴影\n  看起来像那么回事\n*/\n\n#part-view {\n  border-radius: 5px;\n  box-shadow: 0 0 4px red;\n}\n\n/**\n  看起来图片的圆角没生效\n  这个好办加个overflow就ok了\n\n  冗余代码先忽略~\n*/\n\n#part-view {\n  overflow: hidden;\n}\n\n/**\n  有点小清新的感觉\n  下面处理文字了\n  先把内边距整大一些\n*/\n\n#part-view .summary {\n  padding: 20px;\n}\n\n/**\n  地点加粗一下\n*/\n\n#part-view .summary .location {\n  font-weight: bold;\n}\n\n/**\n  名字变个色\n*/\n\n#part-view .summary .name {\n  color: #756b6b;\n}\n\n/**\n  职位和公司水平对齐\n*/\n\n#part-view .summary .position {\n  float: left;\n}\n\n#part-view .summary .company {\n  float: right;\n}\n\n/**\n  此时我想在名字下面加个下划线\n  由于外层有个padding，我们来适当地重构下\n*/\n\n#part-view .summary {\n  padding: 0 !important;\n}\n\n#part-view .summary .location,\n#part-view .summary .name,\n#part-view .summary .position,\n#part-view .summary .company {\n  padding: 5px 20px;\n}\n\n#part-view .summary .name {\n  border-bottom: 1px solid #ccc;\n}\n\n/**\n  好了，就到这了，下次继续优化~\n  88\n*/"
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 function load() {
-    var cssText = __webpack_require__(1);
-    var cssArr = cssText.split('\n');
+    var cssText = __webpack_require__(2);
+    var partText = __webpack_require__(1);
     var insertCss = __webpack_require__(0);
 
-    // function insertAfter(newNode, referenceNode) {
-    //     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-    // }
-    
-    // window.document.designMode = "On";
-    var pre = document.querySelector('pre');
-    var i = 0;
-    var j = 0;
-    var k = 0;
-    var str = '';
-
     var sheet = (function() {
-        // Create the <style> tag
         var style = document.createElement("style");
-
-        // Add a media (and/or media query) here if you'd like!
-        // style.setAttribute("media", "screen")
-        // style.setAttribute("media", "only screen and (max-width : 1024px)")
-
-        // WebKit hack :(
         style.appendChild(document.createTextNode(""));
 
         // Add the <style> element to the page
@@ -172,37 +160,64 @@ function load() {
 
         return style.sheet;
     })();
-    var refreshIntervalOne = setInterval(function() {
-        if (j > (cssArr.length - 1)) {
-            clearInterval(refreshIntervalOne);
-            return;
-        }
-        i = 0;
-        str = cssArr[j] + '\n';
 
-        var refreshIntervalTwo = setInterval(function() {
-            if (i > (str.length - 1)) {
-                clearInterval(refreshIntervalTwo);
+    function typing(content, selector, callback, final) {
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var str = '';
+        var contentArr = content.split('\n');
+
+        var refreshIntervalOne = setInterval(function() {
+            if (j > (contentArr.length - 1)) {
+                if (final && typeof final === 'function') {
+                    final();
+                }
+                clearInterval(refreshIntervalOne);
                 return;
             }
+            i = 0;
+            str = contentArr[j] + '\n';
+
+            var refreshIntervalTwo = setInterval(function() {
+                if (i > (str.length - 1)) {
+                    clearInterval(refreshIntervalTwo);
+                    return;
+                }
+                if (callback && typeof callback === 'function') {
+                    callback(str, i);
+                    
+                }
+
+                selector.append(str[i]);
+                i++;
+            }, parseInt(500 / str.length));
+            j++;
+            window.scrollTo(0,document.body.scrollHeight);
+        }, 550);
+    }
+
+    typing(partText, document.getElementById('part'), '', function() {
+        document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('part').innerText);
+    });
+
+
+    setTimeout(function() {
+    	var k = 0;
+        typing(cssText, document.querySelector('pre'), function(str, i) {
             if (str[i] === '}') {
                 sheet.insertRule(cssText.split('}')[k] + '}', 0);
                 k++;
             }
-            pre.append(str[i]);
+        });
+    }, partText.split('\n').length * 550 + 1000);
 
-            i++;
-        }, parseInt(500 / str.length));
-        j++;
-        // body.append('\n');
-    }, 550);
+
 
 
     var editable = document.getElementById('editor');
     editable.addEventListener('input', function() {
-        // sheet.insertRule(cssText.split('}')[k] + '}', 0);
         var styleElement = insertCss(document.querySelector('pre').innerText, document.querySelector('style').nextSibling);
-        console.log('Hey, somebody changed something in my text!');
     });
 }
 

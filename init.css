@@ -1,0 +1,10 @@
+
+#part {
+    white-space: pre-line;
+}
+
+#part-view {
+	position: fixed;
+    right: 100px;
+    top: 100px;
+}
