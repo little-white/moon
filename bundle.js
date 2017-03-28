@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -140,16 +140,86 @@ module.exports = "<!-- 我叫小moon -->\n<!-- 从小在西安长大 -->\n<!-- �
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = "/**\n  这网络头像也忒大了，让我变小一点\n  只需要改变width\n*/\n\nimg {\n  width: 300px;\n}\n\n/**\n  为了让我的名片凸显出来\n  我们加个\n  圆角\n  阴影\n  看起来像那么回事\n*/\n\n#part-view {\n  border-radius: 5px;\n  box-shadow: 0 0 4px red;\n}\n\n/**\n  看起来图片的圆角没生效\n  这个好办加个overflow就ok了\n\n  冗余代码先忽略~\n*/\n\n#part-view {\n  overflow: hidden;\n}\n\n/**\n  有点小清新的感觉\n  下面处理文字了\n  先把内边距整大一些\n*/\n\n#part-view .summary {\n  padding: 20px;\n}\n\n/**\n  地点加粗一下\n*/\n\n#part-view .summary .location {\n  font-weight: bold;\n}\n\n/**\n  名字变个色\n*/\n\n#part-view .summary .name {\n  color: #756b6b;\n}\n\n/**\n  职位和公司水平对齐\n*/\n\n#part-view .summary .position {\n  float: left;\n}\n\n#part-view .summary .company {\n  float: right;\n}\n\n/**\n  此时我想在名字下面加个下划线\n  由于外层有个padding，我们来适当地重构下\n*/\n\n#part-view .summary {\n  padding: 0 !important;\n}\n\n#part-view .summary .location,\n#part-view .summary .name,\n#part-view .summary .position,\n#part-view .summary .company {\n  padding: 5px 20px;\n}\n\n#part-view .summary .name {\n  border-bottom: 1px solid #ccc;\n}\n\n/**\n  好了，就到这了，下次继续优化~\n  88\n*/"
+module.exports = "/**\n  这网络头像也忒大了，让我变小一点\n  只需要改变width\n*/\n\nimg {\n    width: 300px;\n}\n\n\n/**\n  为了让我的名片凸显出来\n  我们加个\n  圆角\n  阴影\n  看起来像那么回事\n*/\n\n#part-view {\n    border-radius: 5px;\n    box-shadow: 0 0 4px red;\n}\n\n\n/**\n  看起来图片的圆角没生效\n  这个好办加个overflow就ok了\n\n  冗余代码先忽略~\n*/\n\n#part-view {\n    overflow: hidden;\n}\n\n\n/**\n  有点小清新的感觉\n  下面处理文字了\n  先把内边距整大一些\n*/\n\n#part-view .summary {\n    padding: 20px;\n}\n\n\n/**\n  地点加粗一下\n*/\n\n#part-view .summary .location {\n    font-weight: bold;\n}\n\n\n/**\n  名字变个色\n*/\n\n#part-view .summary .name {\n    color: #756b6b;\n}\n\n\n/**\n  职位和公司水平对齐\n*/\n\n#part-view .summary .position {\n    float: left;\n}\n\n#part-view .summary .company {\n    float: right;\n}\n\n\n/**\n  此时我想在名字下面加个下划线\n  由于外层有个padding，我们来适当地重构下\n*/\n\n#part-view .summary {\n    padding: 0 !important;\n}\n\n#part-view .summary .location,\n#part-view .summary .name,\n#part-view .summary .position,\n#part-view .summary .company {\n    padding: 5px 20px;\n}\n\n#part-view .summary .name {\n    border-bottom: 1px solid #ccc;\n}\n\n\n/**\n  好了，就到这了，下次继续优化~\n  88\n*/\n"
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+function isFunction(fn) {
+    return fn && typeof fn === 'function';
+}
+
+function isEnd(index, arr) {
+    return index > (arr.length - 1);
+}
+module.exports = function(options) {
+    var strIndex = 0;
+    var lineIndex = 0;
+    var str = '';
+    var contentArr = options.content.split('\n');
+
+    if (!options.lineTimer) {
+    	options.lineTimer = 500;
+    }
+
+    var promiseContent = new Promise(function(resolve, reject) {
+        var refreshIntervalOne = setInterval(function() {
+            if (isEnd(lineIndex, contentArr)) {
+                resolve();
+                clearInterval(refreshIntervalOne);
+                return;
+            }
+            strIndex = 0;
+            str = contentArr[lineIndex] + '\n';
+
+            // var promiseLine = new Promise(function(resolveIn, rejectIn) {
+                var refreshIntervalTwo = setInterval(function() {
+                    if (isEnd(strIndex, str)) {
+                        clearInterval(refreshIntervalTwo);
+                        return;
+                    }
+                    // resolveIn(str[strIndex]);
+                    if (isFunction(options.strEndCallback)) {
+                    	options.strEndCallback(str[strIndex]);	
+                    }
+                    
+                    options.selector.append(str[strIndex]);
+                    strIndex++;
+                }, parseInt(options.lineTimer / str.length));
+            // });
+
+            // promiseLine.then(function(word) {
+            //     if (isFunction(options.strEndCallback)) {
+            //         options.strEndCallback(word);
+            //     }
+            // });
+
+            lineIndex++;
+            if (isFunction(options.lineEndCallback)) {
+                options.lineEndCallback();
+            }
+            // window.scrollTo(0, document.body.scrollHeight);
+        }, 550);
+    });
+
+    promiseContent.then(function() {
+        if (isFunction(options.contentEndCallback)) {
+            options.contentEndCallback();
+        }
+    })
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 function load() {
     var cssText = __webpack_require__(2);
     var partText = __webpack_require__(1);
     var insertCss = __webpack_require__(0);
+    var typing = __webpack_require__(3);
 
     var sheet = (function() {
         var style = document.createElement("style");
@@ -161,58 +231,31 @@ function load() {
         return style.sheet;
     })();
 
-    function typing(content, selector, callback, final) {
-        var i = 0;
-        var j = 0;
-        var k = 0;
-        var str = '';
-        var contentArr = content.split('\n');
-
-        var refreshIntervalOne = setInterval(function() {
-            if (j > (contentArr.length - 1)) {
-                if (final && typeof final === 'function') {
-                    final();
-                }
-                clearInterval(refreshIntervalOne);
-                return;
-            }
-            i = 0;
-            str = contentArr[j] + '\n';
-
-            var refreshIntervalTwo = setInterval(function() {
-                if (i > (str.length - 1)) {
-                    clearInterval(refreshIntervalTwo);
-                    return;
-                }
-                if (callback && typeof callback === 'function') {
-                    callback(str, i);
-                    
-                }
-
-                selector.append(str[i]);
-                i++;
-            }, parseInt(500 / str.length));
-            j++;
-            window.scrollTo(0,document.body.scrollHeight);
-        }, 550);
-    }
-
-    typing(partText, document.getElementById('part'), '', function() {
-        document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('part').innerText);
+    typing({
+        content: partText,
+        selector: document.getElementById('part'),
+        contentEndCallback: function() {
+            document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('part').innerText);
+        }
     });
 
 
     setTimeout(function() {
-    	var k = 0;
-        typing(cssText, document.querySelector('pre'), function(str, i) {
-            if (str[i] === '}') {
-                sheet.insertRule(cssText.split('}')[k] + '}', 0);
-                k++;
+        var k = 0;
+        typing({
+            content: cssText,
+            selector: document.querySelector('pre'),
+            strEndCallback: function(word) {
+                if (word === '}') {
+                    sheet.insertRule(cssText.split('}')[k] + '}', 0);
+                    k++;
+                }
+            },
+            lineEndCallback: function(){
+                window.scrollTo(0, document.body.scrollHeight);
             }
         });
     }, partText.split('\n').length * 550 + 1000);
-
-
 
 
     var editable = document.getElementById('editor');

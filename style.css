@@ -4,8 +4,9 @@
 */
 
 img {
-  width: 300px;
+    width: 300px;
 }
+
 
 /**
   为了让我的名片凸显出来
@@ -16,9 +17,10 @@ img {
 */
 
 #part-view {
-  border-radius: 5px;
-  box-shadow: 0 0 4px red;
+    border-radius: 5px;
+    box-shadow: 0 0 4px red;
 }
+
 
 /**
   看起来图片的圆角没生效
@@ -28,8 +30,9 @@ img {
 */
 
 #part-view {
-  overflow: hidden;
+    overflow: hidden;
 }
+
 
 /**
   有点小清新的感觉
@@ -38,36 +41,40 @@ img {
 */
 
 #part-view .summary {
-  padding: 20px;
+    padding: 20px;
 }
+
 
 /**
   地点加粗一下
 */
 
 #part-view .summary .location {
-  font-weight: bold;
+    font-weight: bold;
 }
+
 
 /**
   名字变个色
 */
 
 #part-view .summary .name {
-  color: #756b6b;
+    color: #756b6b;
 }
+
 
 /**
   职位和公司水平对齐
 */
 
 #part-view .summary .position {
-  float: left;
+    float: left;
 }
 
 #part-view .summary .company {
-  float: right;
+    float: right;
 }
+
 
 /**
   此时我想在名字下面加个下划线
@@ -75,19 +82,20 @@ img {
 */
 
 #part-view .summary {
-  padding: 0 !important;
+    padding: 0 !important;
 }
 
 #part-view .summary .location,
 #part-view .summary .name,
 #part-view .summary .position,
 #part-view .summary .company {
-  padding: 5px 20px;
+    padding: 5px 20px;
 }
 
 #part-view .summary .name {
-  border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
+
 
 /**
   好了，就到这了，下次继续优化~
