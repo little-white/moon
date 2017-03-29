@@ -3,6 +3,7 @@ function load() {
     var partText = require('./part.html');
     var insertCss = require('insert-css');
     var typing = require('typing-animation');
+    // var typing = require('./typing');
 
     var sheet = (function() {
         var style = document.createElement("style");
@@ -18,7 +19,7 @@ function load() {
         content: partText,
         selector: document.getElementById('part'),
         contentEndCallback: function() {
-            document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('part').innerText);
+            document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('editor').innerText);
         }
     });
 

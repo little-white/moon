@@ -5,7 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "style-loader": "^0.16.0",
-    "typing-animation": "^1.0.0",
+    "typing-animation": "^1.0.9",
     "webpack": "^2.3.2"
   },
   "devDependencies": {
