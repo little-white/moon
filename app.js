@@ -2,7 +2,7 @@ function load() {
     var cssText = require('./style.css');
     var partText = require('./part.html');
     var insertCss = require('insert-css');
-    var typing = require('./typing.js');
+    var typing = require('typing-animation');
 
     var sheet = (function() {
         var style = document.createElement("style");
