@@ -197,7 +197,13 @@ function typingAnimation(options) {
                     if (isFunction(options.strEndCallback)) {
                         options.strEndCallback(elem);
                     }
-                    document.querySelector('pre').append(elem);
+                    if (isFunction(options.wordCallback)) {
+                        options.wordCallback(elem);
+                    }
+                    if (options.selector) {
+                        document.querySelector('pre').append(elem);
+                    }
+                    
                     resolve(elem);
                 }, index * parseInt(options.lineTimer / line.length))
             })
@@ -210,7 +216,6 @@ function typingAnimation(options) {
         Promise.all(promisesWord);
     }
 }
-
 
 module.exports = typingAnimation;
 
