@@ -1,7 +1,14 @@
 function load() {
     var cssText = require('./style.css');
     var partText = require('./part.html');
-    var insertCss = require('insert-css');
+    // var insertCss = require('insert-css');
+    function insertCss(elem, css){
+        if (elem.styleSheet) {
+            elem.styleSheet.cssText = css;
+        } else {
+            elem.textContent = css;
+        }
+    }
     var typing = require('typing-animation');
     // var typing = require('./typing');
 
@@ -19,7 +26,7 @@ function load() {
         content: partText,
         selector: document.getElementById('part'),
         contentEndCallback: function() {
-            document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('editor').innerText);
+            document.getElementById('part-view').insertAdjacentHTML('beforeend', document.getElementById('part').innerText);
         }
     });
 
@@ -30,10 +37,11 @@ function load() {
             content: cssText,
             selector: document.querySelector('pre'),
             strEndCallback: function(word) {
-                if (word === '}') {
-                    sheet.insertRule(cssText.split('}')[k] + '}', 0);
-                    k++;
-                }
+                // if (word === '}') {
+                //     sheet.insertRule(cssText.split('}')[k] + '}', 0);
+                //     k++;
+                // }
+                insertCss(document.querySelector('style'), document.querySelector('#editor').innerText);
             },
             lineEndCallback: function(){
                 window.scrollTo(0, document.body.scrollHeight);
@@ -44,7 +52,7 @@ function load() {
 
     var editable = document.getElementById('editor');
     editable.addEventListener('input', function() {
-        var styleElement = insertCss(document.querySelector('pre').innerText, document.querySelector('style').nextSibling);
+        insertCss(document.querySelector('style'), document.querySelector('#editor').innerText);
     });
 }
 
